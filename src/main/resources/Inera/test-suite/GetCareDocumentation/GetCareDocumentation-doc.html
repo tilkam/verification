@@ -1,0 +1,282 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+					ul {
+						margin-top: 10px;
+						margin-bottom: 10px;
+					}
+					h2, h3 {
+						color: #196619;
+					}
+				</style>
+</head>
+<body>
+<h1>TK-testsvit för GetCareDocumentation 2.1</h1>
+<p>Domänversion: 2.1.13</p>
+<h2>Om testsviten</h2>
+<p>Detta dokument beskriver testsviten för GetCareDocumentation 2.1. Testsviten innehåller ett antal testfall som kan användas för att verifiera implementationen innan integrationen med den nationella tjänsteplattformen.<br>
+				Testsviten innehåller ett antal testfall som kan användas för att samla in information om anslutande system. Denna information kan sedan ligga till grund för ett underlag för godkännande.<br>
+				Ett testfall med ej förväntat utfall ska med andra ord ses som en informationskälla för den avvikelse som ska rapporteras i självdeklarationen.
+				I dessa fall rekommenderas mer omfattande tester och en utförlig dokumentation av vad man observerat, för att informationen redan i första granskningsrundan skall vara tillräcklig för beslut.<br>
+
+				Detta underlag för godkännande kommer att granskas av ICC på Inera som rapporterar avvikelser. Dessa granskas därefter av Ineras avvikelsegrupp. Utkomsten av denna granskning kan leda till en eller flera avvikelser av tre olika typer där en avvikelse kan anses vara:<br><ul>
+<li>stoppande för produktion och kräver åtgärd.</li>
+<li>ej stoppande för produktion men kräver åtgärd.</li>
+<li>godkänd avvikelse.</li>
+</ul><br>
+				I samtliga fall så ansvarar avvikelsegruppen för att informera leveransansvarig samt aktuell förvaltningsgrupp.<br>
+				Patientsäkerhet, interoperabilitet samt följsamhet mot tekniska regelverk är några av de kriterier som väger tungt och avgör hur avvikelsen klassas.<br>
+				Historiskt godkända avvikelser finns för jämförelse på <a target="blank" href="www.inera.se">www.inera.se</a>. Att motsvarande avvikelse finns på denna lista ska endast ses som en vägledning då varje fall bedöms enskilt. <br>
+
+				Testsviten använder SoapUI för att verifiera implementationen. Dokumentation om SoapUI hittas här: <a target="blank" href="https://www.soapui.org/getting-started/introduction.html">www.soapui.org</a>.<br>
+				Klicka på <a target="blank" href="https://www.soapui.org/downloads/soapui.html">den här länken</a> för att ladda hem en gratisversion av SoapUI. Installera enligt anvisning.</p>
+<h2>⚠️Viktigt meddelande om man kör version 2.0 av tjänstekontraktet GetCareDocumentation⚠️</h2>
+<p>
+				Om man kör version 2.0 av tjänstekontraktet GetCareDocumentation så måste man kommentera bort följande rader i constraints.xml filen (se nedan).
+				Sök upp raderna och kommentera ut hela raden med testet.
+				Detta gör att man tar bort kontrollen om elementet nullified och nulliefiedReason skickas med i svaret.
+			</p>
+<p><code><span style="width:100%;display:block">&lt;iso:assert test="not(urn1:nullified)"&gt;Element careDocumentationHeader must not contain 'nullified'.&lt;/iso:assert&gt;</span><span style="width:100%;display:block">&lt;iso:assert test="not(urn1:nullifiedReason)"&gt;Element careDocumentationHeader must not contain 'nullifiedReason'.&lt;/iso:assert&gt;</span></code></p>
+<p><span style="width:100%">Kommentera ut genom att sätta följande starttecken &lt;!-- och sluttecken --&gt; runtom elementen.
+			När du kommenterat bort testeterna för 'nullified' och 'nullifiedReason' ska det se ut enligt nedan.</span></p>
+<p><code><span style="width:100%;display:block">&lt;!--&lt;iso:assert test="not(urn1:nullified)"&gt;Element careDocumentationHeader must not contain 'nullified'.&lt;/iso:assert&gt;--&gt;</span><span style="width:100%;display:block">&lt;!--&lt;iso:assert test="not(urn1:nullifiedReason)"&gt;Element careDocumentationHeader must not contain 'nullifiedReason'.&lt;/iso:assert&gt;--&gt;</span></code></p>
+<h2>Förberedelser</h2>
+<p><ul>
+<li>Gå till mappen <b>test-suite</b> i release-paketet</li>
+<li>Kopiera filen <b>‘soapui-support-N.N.NN.jar’</b> ('N.N.NN' är versionsnummer) till mappen <b>/bin/ext</b> där Soap-UI är installerat (leta efter mappen <b>/Program Files/Smartbear</b> på PC eller <b>/contents/java/app</b> på MAC OS)</li>
+<li>Öppna SoapUI och importera SoapUI-projektet (<b>test-suite/GetCareDocumentation/GetCareDocumentation-soapui-project.xml</b>) (välj ‘Import Project’ från menyn 'File')</li>
+<li>Om din webservice kräver ett SSL-certifikat, kan detta konfigureras via 'Preferences' (via menyn 'File').
+						I fönstret för inställningar, gå till fliken 'SSL Settings' och importera ditt certifikat under 'Keystore'</li>
+<li>Uppdatera <i>data.xml</i> så att den matchar den testdata du har i ditt system. Om du inte har testdata som passar så behöver detta läggas in i källsystemet (se nedan för instruktioner)</li>
+<li>Du borde nu kunna köra testfallen i SoapUI</li>
+</ul></p>
+<h2>Testdata i <i>data.xml</i>
+</h2>
+<p>
+					Innan man kör testfallen i SoapUI så måste den data som skickas med i anropen anpassas utifrån det system som man vill testa. Detta görs genom att ändra i filen <i>data.xml</i> enligt nedan.<br><br>
+					Filen är i XML-format och i början finns en sektion som heter "globaldata". Här anger man den konfiguration som kommer att användas av alla testfall.<br>
+					Varje element i "globaldata" kan omdefinieras för ett specifikt testfall vid behov. Följande element är globala:
+					<ul>
+<li>webServiceUrl</li>
+<li>httpHeaderHsaId</li>
+<li>logicalAddress</li>
+<li>patientId</li>
+<li>patientIdType</li>
+<li>sourceSystemHSAId</li>
+<li>logTestData</li>
+<li>logTestDataPath</li>
+<li>logTestDataFilesAllowed</li>
+<li>importantGCDMessage</li>
+</ul>
+					Globaldata innehåller ett antal konfigurationsparametrar för loggning: <br><b>logTestData:</b> Sätts till true/false beroende på om loggning ska utföras eller ej. <b> Observera att patientdata kan lagras vid påslagen loggning.</b><br><b>logTestDataPath:</b> Sökvägen till den katalog där loggfilerna sparas, måste vara en katalog som användaren har rättighet att skriva i. <br><b>logTestDataFilesAllowed:</b> Max antal filer som sparas. Det blir en fil för varje testfall som körs. När max antal filer har uppnåtts tas de äldsta bort så nya kan sparas.<br></p>
+<h2>Allmänna tips</h2>
+<p><ul>
+<li>Kör ett testfall i taget och verifiera resultatet. Man kan också köra en hel testsvit (t.ex. "1 Basic tests") för att köra igenom alla testfall i just den sviten.<br>
+						Om du gör någon ändring som ska påverka ett specifikt testfall, kan man efter att ha verifierat just det testfallet köra genom hela sviten för att snabbt se att det "hänger ihop".</li>
+<li>Eventuella felmeddelanden skrivs ut dels till fönstret för testfallet och dels i sektionen "assertions" i anrops-fönstret.</li>
+</ul></p>
+<h2>Beskrivning av testfallen</h2>
+<p>De parametrar man anger för ett specifikt testfall kompletterar och/eller omdefinierar de parametrar som anges i "globaldata".<br>
+				Det betyder att både parametrar från "globaldata" och det specifika testfallets sektion i filen används för det aktuella testfallet.<br>
+				OBS! Om en parameter med samma namn definieras både i "globaldata" och specifikt för testfallet, så kommer värdet från testfalls-sektionen att användas.<br>
+				Ett exempel kan vara "patientId". Denna definieras i "globaldata", eftersom det är troligt att det mesta av testdatan kommer att röra samma patient.<br>
+				Men för vissa testfall vill man kunna använda en annan patient och för dessa testfall definierar man detta genom att ta bort kommentars-markeringen runt parametern "patientId" i testfallets sektion.<br>
+				Glöm inte att spara <i>data.xml</i> efter att du har ändrat i den.</p>
+<ul style="list-style-type:none">
+<h3><li>1.1.1 Personnummer</li></h3>
+<p>Filtrering. Verifierar att resultatet endast innehåller poster för given patient.</p>
+<ul></ul>
+<h3><li>1.1.2 Samordningsnummer</li></h3>
+<p>Filtrering. Testfall för filtrering på samordningsnummer. Ersätt patientId med det samordningsnummer som du vill filtrera på.</p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>patientId</li>
+<li>patientIdType</li>
+</ul>
+<h3><li>1.1.3 Lokalt reservnummer</li></h3>
+<p>Filtrering. Testfall för filtrering på reservnummer. Ersätt patientId med det reservnummer som du vill filtrera på och ersätt patientIdType med lokalt definierat OID för reservnummer.</p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>patientId</li>
+<li>patientIdType</li>
+</ul>
+<h3><li>1.2 Tidsfiltrering</li></h3>
+<p><description>Följande tester på tidsfiltrering består av flera steg.
+			<ol>
+				<li>Anrop utan filtrering.</li>
+				<li>Sökintervall beräknas (se respektive testfall).</li>
+				<li>Anrop med tidsfiltrering för varje beräknat sökintervall. Resultatet jämförs med förväntat resultat.</li>
+			</ol>
+			För bra testning på dessa punkter är en varierad testdata avseende tidpunkter viktig.
+        </description></p>
+<ul></ul>
+<h3><li>1.2.1 timePeriod</li></h3>
+<p><description>Tidsfiltrering. Sökning sker på alla datum i elementen <b>documentTime</b>, <b>authorTime</b>, <b>signatureTime</b> och <b>dissentingOpinion.authorTime</b> i det ofiltrerade svaret.
+			<ul>
+				<li>
+<b>documentTime</b> är tidpunkt för händelsen som anteckningen berör.</li>
+				<li>
+<b>authorTime</b> är tidpunkt för när anteckningen skrevs in i systemet.</li>
+				<li>
+<b>signatureTime</b> är tidpunkt för signering (alternativt låsning) av anteckningen.</li>
+				<li>
+<b>dissentingOpinion.authorTime</b> är tidpunkt för författande av avvikande åsikt.</li>
+			</ul>
+		</description></p>
+<ul></ul>
+<h3><li>1.2.2 timePeriod intervall</li></h3>
+<p><description>Tidsfiltrering. Sökning sker på slumpvisa intervall mellan första och sista datum som förekommer i det ofiltrerade svaret.</description></p>
+<b>Testfalls-specifika parametrar</b><ul><li>numberOfIntervals</li></ul>
+<h3><li>1.2.3 timePeriod empty response</li></h3>
+<p><description>Tidsfiltrering. Mata in tidsintervall som helt ligger före det första datumet i den tidigaste posten för aktuell patient. Förväntat svar är en tom respons.</description></p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>timePeriodStart</li>
+<li>timePeriodEnd</li>
+</ul>
+<h3><li>1.2.4 timePeriod manuell</li></h3>
+<p><description>Tidsfiltrering. Testfall för utforskande testning.</description></p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>timePeriodStart</li>
+<li>timePeriodEnd</li>
+</ul>
+<h3><li>1.3 CareUnit</li></h3>
+<p>Filtrering. Verifierar att resultatet endast innehåller poster för given vårdenhet.</p>
+<b>Testfalls-specifika parametrar</b><ul><li>careUnitHSAid</li></ul>
+<h3><li>1.4 SourceSystem</li></h3>
+<p>Filtrering. Verifierar att resultatet endast innehåller poster för givet källsystem.</p>
+<ul></ul>
+<h3><li>1.5 CareContact</li></h3>
+<p>Filtrering. Verifierar att resultatet endast innehåller poster för given vårdkontakt.
+									<br><b>careContactId</b> är vårdkontaktens unika id.</p>
+<b>Testfalls-specifika parametrar</b><ul><li>careContactId</li></ul>
+<h3><li>1.7 SoapFault</li></h3>
+<p>Verifierar att responsen är ett <b>SOAP Fault</b>.<br>Detta testfall kräver att tjänsteproducenten skapar förutsättningar för ett internt fel att uppstå, t.ex. att man stänger av kopplingen mot en databas.<br>OBS! Manuell kontroll av svarsmeddelandet krävs för att säkerställa att meddelandet inte innehåller personuppgifter och att medföljande log-id inte är spårbart till patienten.</p>
+<ul></ul>
+<h3><li>1.8 NonExisting Patient</li></h3>
+<p><description>Verifierar att tjänsteproducenten returnerar ett tomt resultat istället för Soap Fault, om patienten är okänd i systemet.</description></p>
+<b>Testfalls-specifika parametrar</b><ul><li>patientId</li></ul>
+<h3><li>1.9 NonExisting CareContact</li></h3>
+<p><description>Verifierar att tjänsteproducenten returnerar ett tomt resultat istället för Soap Fault, om vårdkontakten är okänd i systemet.</description></p>
+<b>Testfalls-specifika parametrar</b><ul><li>careContactId</li></ul>
+<h3><li>2.1 Encoding_HeaderProlog</li></h3>
+<p>Verifierar att
+									<ul>
+<li>Header-attributet "Content-type" har, om attributet finns, en teckenuppsättning som är satt till UTF-8 eller UTF-16</li>
+<li>Attributet "XML Prolog" har, om attributet finns, en teckenuppsättning som är satt till UTF-8 eller UTF-16</li>
+<li>Om båda attributen finns så ska de vara lika</li>
+</ul></p>
+<ul></ul>
+<h3><li>2.2 Encoding_SpecialCharacters</li></h3>
+<p>Verifierar att responsen innehåller en sträng med specialtecken.<br>
+									Denna sträng behöver läggas upp på en post i källsystemet och bör innehålla så många specialtecken som möjligt.</p>
+<b>Testfalls-specifika parametrar</b><ul><li>testString</li></ul>
+<h3><li>3.1 VG_VE</li></h3>
+<p>Verifierar att alla returnerade poster innehåller elementen <b>healthcareProfessionalCareUnitHSAId</b> och <b>healthcareProfessionalCareGiverHSAId</b>, som krävs för PDL-loggning.</p>
+<ul></ul>
+<h3><li>3.2 AuthorTime</li></h3>
+<p>Verifierar att en av de returnerade posterna innehåller tidpunkt då informationen registrerades. Element <b>authorTime</b>.</p>
+<ul></ul>
+<h3><li>4.1 ApprovedForPatient_true</li></h3>
+<p>Verifierar att tjänsteproducenten kan returnera en post som talar om att informationen får delas till patient. Element <b>approvedForPatient</b>.</p>
+<ul></ul>
+<h3><li>4.2 ApprovedForPatient_false</li></h3>
+<p>Verifierar att tjänsteproducenten kan returnera en post som talar om att informationen inte får delas till patient. Element <b>approvedForPatient</b>.</p>
+<ul></ul>
+<h3><li>5.1 signed</li></h3>
+<p>Verifierar att tjänsteproducenten kan returnera en signerad post. Element <b>legalAuthenticator</b>.</p>
+<ul></ul>
+<h3><li>5.2 unsigned</li></h3>
+<p>Verifierar att tjänsteproducenten kan returnera en osignerad post. Element <b>legalAuthenticator</b>.</p>
+<ul></ul>
+<h3><li>5.3 locked</li></h3>
+<p>Verifierar att tjänsteproducenten kan returnera en post som har låsts av systemet efter att en viss tid har förflutit utan att någon har signerat den. Element <b>legalAuthenticator</b>.</p>
+<ul></ul>
+<h3><li>5.4 DissentingOpinion</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en avvikande åsikt. Element <b>clinicalDocumentNote.dissentingOpinion</b>.</description></p>
+<ul></ul>
+<h3><li>5.5 ClinicalDocumentNoteCode_Utredning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "utredning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.6 ClinicalDocumentNoteCode_Behandling</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "behandling". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.7 ClinicalDocumentNoteCode_Sammanfattning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "sammanfattning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.8 ClinicalDocumentNoteCode_Samordning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "samordning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.9 ClinicalDocumentNoteCode_Inskrivning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "inskrivning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.10 ClinicalDocumentNoteCode_Slutanteckning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "slutanteckning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.11 ClinicalDocumentNoteCode_AnteckningUtanFysisktMöte</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "anteckning utan fysiskt möte". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.12 ClinicalDocumentNoteCode_Slutenvårdsanteckning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "slutenvårdsanteckning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.13 ClinicalDocumentNoteCode_Besöksanteckning</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med anteckning av typen "besöksanteckning". Element <b>clinicalDocumentNoteCode</b>.</description></p>
+<ul></ul>
+<h3><li>5.14 ClinicalDocumentNoteText-DocBook</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med en giltigt formatterad DocBook-anteckning. Element <b>clinicalDocumentNoteText</b>.</description></p>
+<ul></ul>
+<h3><li>5.15 DocBook-extended</li></h3>
+<p><description>Elementet <b>clinicalDocumentNoteText</b> kan innehålla DocBook-formatterad text.<br>
+			Testa att lägga in strängen <b>åäö&lt;&gt;&gt;&lt;&amp;</b> för att säkerställa att källsystemet kan kapsla in specialtecken på rätt sätt.<br>
+			Testa olika varianter på var denna sträng kan ligga; löpande text, mallrubriker, sökord m.m.<br>
+			Testa även olika varianter på strängen, gärna med specialtecken som ofta förekommer i er verksamhet.<br><br>
+			OBS! Detta är ett manuellt testfall, där responsen behöver kontrolleras manuellt. SoapUI kommer att ge ett "grönt testfall" även fast strängen är korrupt.
+		</description></p>
+<ul></ul>
+<h3><li>5.16 MultimediaEntryValue</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med en inbäddad binär fil. Den inbäddade filen sparas i mappen "test-output" för manuell granskning.</description></p>
+<b>Testfalls-specifika parametrar</b><ul><li>outputFileName</li></ul>
+<h3><li>5.17 MultimediaEntryReference</li></h3>
+<p><description>Verifierar att tjänsteproducenten kan returnera en post med en länkad fil. Länkens korrekthet behöver verifieras manuellt.</description></p>
+<ul></ul>
+<h3><li>6.1 Loadtest</li></h3>
+<p>
+								Lasttester. Testfallen 6.1.1 och 6.1.2 finns under fliken Load tests i 6.1 Loadtest. Öppna testfallen genom att dubbelklicka på dem och klicka på den gröna pilen för att köra testet.<br><br><b>6.1.1 Grund</b><br>
+								Syftet med testet är dels att verifiera att systemet kan hantera minst 10 samtidiga trådar, dels att skapa sig en bild av systemets prestanda. Testet är designat att ta max 3 minuter.<br>
+								Defaultinställning för testfallet är: Threads (10), Strategy (Simple), Test Delay (1000), Random (0.5), Limit (180 Seconds).<br>
+								I SLA-kapitlet i självdeklarationen, under "Övrig kommentar", ange genomsnittlig responstid. Ta värdet som visas i sista raden i kolumn "avg" och dela med antal anrop (oftast 2). Ange sedan värdet med enhet millisekunder (ms).
+								<br><br><b>6.1.2 Uthållighet</b><br>
+								Syftet med testet är att undersöka prestanda hos systemet över längre tid (30 minuter).<br>
+								Defaultinställning för testfallet är: Threads (5), Strategy (Variance), Interval (60), Variance (1.0), Limit (1800 Seconds).<br>
+								I SLA-kapitlet i självdeklarationen, under "Övrig kommentar", notera om testet gick att genomföra utan problem. Om inte, notera hur lång tid det var möjligt att köra.	</p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>patientId1</li>
+<li>patientId2</li>
+</ul>
+<h3><li>6.2 Recovery</li></h3>
+<p>
+								Återhämtningstest. Testfallet 6.2.1 finns under fliken Load tests i 6.2 Recovery. Öppna testfallet genom att dubbelklicka på det och klicka på den gröna pilen för att köra testet.<br><br><b>6.2.1 Återhämtning</b><br>
+								Syftet med testet är att utsätta systemet för maximal last och att verifiera att systemet automatiskt återhämtar sig.<br>
+								Defaultinställning för testfallet är: Threads (10), Strategy (Thread), Start Threads (10), End Threads (100), Limit (300 Seconds).<br>
+								För att kontrollera att systemet har kunnat återhämta sig efter maximal last så rekommenderas att köra testfall "1.1.1 Personnummer" för att se att systemet svarar. I SLA-kapitlet i självdeklarationen, under "Övrig kommentar", notera om systemet kunde återhämta sig efter att ha utsatts för maximal last. Ange även hur många trådar som testet avslutades med.</p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>patientId1</li>
+<li>patientId2</li>
+</ul>
+<h3><li>7.1 CareUnit_Blacklisted</li></h3>
+<p>Filtrering. Verifierar att tjänsteproducenten kan filtrera resultatet baserat på tjänstekonsumentHSAId (HTTP-headern <b>x-rivta-original-serviceconsumer-hsaid</b>).
+									<br>Undersök och jämför det ofiltrerade svaret från producenten med det senare svaret vars begäran använt ett tjänstekonsumentHSAId på vilket producenten utfört bortfiltrering av vårdenhet,<br> antalet poster skall i det senare svaret vara färre och parametern filterString skall då inte finnas i det filtrerade svaret. Testfallet är ej applicerbart för system som inte implementerat denna typ av filtrering.</p>
+<b>Testfalls-specifika parametrar</b><ul>
+<li>httpHeaderHsaId2</li>
+<li>filterString</li>
+</ul>
+<h3><li>7.2 Consumer_Blacklisted</li></h3>
+<p>Filtrering. Verifierar att tjänsteproducenten returnerar tomt svar för bortfiltrerat tjänstekonsumentHSAId (HTTP-headern "x-rivta-original-serviceconsumer-hsaid").<br>
+								Undersök och jämför det ofiltrerade svaret från producenten med det senare svaret vars begäran använt ett tjänstekonsumentHSAId på vilket producenten utfört bortfiltrering av konsument,<br>
+								Testfallet är ej applicerbart för system som inte implementerat denna typ av filtrering.</p>
+<b>Testfalls-specifika parametrar</b><ul><li>httpHeaderHsaId2</li></ul>
+<h3><li>7.3 Consumer_Independent</li></h3>
+<p>Verifierar att tjänsteproducenten returnerar samma svar oavsett vilket tjänstekonsumentHSAId (HTTP-headern "x-rivta-original-serviceconsumer-hsaid") som anges, observera dock att testfallet endast räknar antal poster och jämför dessa mellan response 1 och 2. Bör även testas manuellt.<br></p>
+<b>Testfalls-specifika parametrar</b><ul><li>httpHeaderHsaId2</li></ul>
+</ul>
+<br><br>
+</body>
+</html>

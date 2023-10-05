@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<iso:schema
+		xmlns="http://purl.oclc.org/dsdl/schematron"
+		xmlns:iso="http://purl.oclc.org/dsdl/schematron"
+		queryBinding='xslt2'
+		schemaVersion='ISO19757-3'>
+
+	<iso:title>Validation for GetFunctionalStatus</iso:title>
+	<iso:ns prefix='urn' uri='urn:riv:clinicalprocess:healthcond:description:GetFunctionalStatusResponder:2' />
+	<iso:ns prefix='urn1' uri='urn:riv:clinicalprocess:healthcond:description:2' />
+	<iso:ns prefix='soapenv' uri='http://schemas.xmlsoap.org/soap/envelope/'/>
+	
+	<iso:pattern abstract="true" id="pattern.CvType">
+		<iso:rule context="$path/urn1:code">
+			<iso:assert test="(../urn1:codeSystem) and (../urn1:displayName)">
+				Element $path: if code is given, codeSystem and displayName must also be given</iso:assert>
+		</iso:rule>
+		<iso:rule context="$path/urn1:codeSystem">
+			<iso:assert test="(../urn1:code) and (../urn1:displayName)">
+				Element $path: if codeSystem is given, code and displayName must also be given</iso:assert>
+			<iso:assert test="matches(.,'^[0-2](\.([0-9])+)+$')">
+                Element 'codeSystem' must be an OID for the current codeSystem.</iso:assert>
+		</iso:rule>
+		<iso:rule context="$path/urn1:originalText">
+			<iso:assert test="not(../urn1:code) and not(../urn1:codeSystem) and not(../urn1:codeSystemName) and not(../urn1:codeSystemVersion) and not(../urn1:displayName)">
+				Element $path: if originalText is given, no other element in $path must be given</iso:assert>
+		</iso:rule>
+	</iso:pattern>
+
+	<!-- Implementing abstract patterns -->
+	
+	<iso:pattern id="healthcareProfessionalRoleCode" is-a="pattern.CvType">
+		<iso:param name="path" value="urn1:healthcareProfessionalRoleCode" />
+	</iso:pattern>
+	<iso:pattern id="legalAuthenticatorRoleCode" is-a="pattern.CvType">
+		<iso:param name="path" value="urn1:legalAuthenticatorRoleCode" />
+	</iso:pattern>
+	<iso:pattern id="typeOfAssessment" is-a="pattern.CvType">
+		<iso:param name="path" value="urn1:typeOfAssessment" />
+	</iso:pattern>
+	<iso:pattern id="disabilityAssessment" is-a="pattern.CvType">
+		<iso:param name="path" value="urn1:disabilityAssessment" />
+	</iso:pattern>
+
+	<!-- Logical rules -->
+
+	<iso:pattern id="functionalStatusAssessmentHeader">
+		<iso:rule context="urn1:functionalStatusAssessmentHeader">
+			<iso:assert test="not(urn1:documentTitle)">Element functionalStatusAssessmentHeader: documentTitle must not be given</iso:assert>
+			<iso:assert test="not(urn1:nullified)">Element functionalStatusAssessmentHeader: nullified must not be given</iso:assert>
+			<iso:assert test="not(urn1:nullifiedReason)">Element functionalStatusAssessmentHeader: nullifiedReason must not be given</iso:assert>
+		</iso:rule>
+	</iso:pattern>
+
+	<iso:pattern id="functionalStatusAssessmentBody">
+		<iso:rule context="urn1:functionalStatusAssessmentBody">
+			<iso:assert test="not(urn1:comment and urn1:assessmentCategory = 'fun-fun')">
+				Element functionalStatusAssessmentBody: If assessmentCategory = "fun-fun", comment must not be given
+			</iso:assert>
+			<iso:assert test="not(urn1:padl and urn1:assessmentCategory = 'fun-fun')">
+				Element functionalStatusAssessmentBody: If assessmentCategory = "fun-fun", padl must not be given
+			</iso:assert>
+			<iso:assert test="not(urn1:disability and urn1:assessmentCategory = 'pad-pad')">
+				Element functionalStatusAssessmentBody: If assessmentCategory = "pad-pad", disability must not be given
+			</iso:assert>
+		</iso:rule>
+	</iso:pattern>
+	
+	<iso:pattern id="Verify non-empty elements">
+        <iso:rule context="soapenv:Body/urn:GetFunctionalStatusResponse//*">
+		    <iso:assert test="normalize-space(.)">Element <iso:name /> is included but empty. All elements included in the response must have valid values.</iso:assert>
+        </iso:rule>
+    </iso:pattern>
+	
+	<iso:pattern id="Verify unique recordId">
+		<iso:rule context="urn:GetFunctionalStatusResponse">
+			<let name="recordIdPath" value="urn:functionalStatusAssessment/urn1:functionalStatusAssessmentHeader/urn1:documentId"/>
+			<iso:assert test="count($recordIdPath) = count(distinct-values($recordIdPath))">Element 'documentId' must contain unique id's</iso:assert>
+		</iso:rule>
+	</iso:pattern>
+	
+</iso:schema>

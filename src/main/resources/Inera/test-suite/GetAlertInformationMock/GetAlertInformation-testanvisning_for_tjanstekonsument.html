@@ -1,0 +1,27 @@
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>
+<body>
+<h1>Testanvisning för tjänstekonsumenter GetAlertInformation 2.0</h1>
+<p>Detta dokument beskriver hur en konsument av tjänstekontraktet GetAlertInformation kan testas med hjälp av SoapUI "mocktjänst".</p>
+<p>Installationsanvisning och övergripande teknisk beskrivning av mocktjänsten finns i dokumentet GetAlertInformationMock-doc.html.</p>
+
+<h2>Generellt</h2>
+<p>Testning av konsumenten sker med en kombination av automatiska och manuella kontroller. 
+Varje testfall genomförs i huvudsak enligt följande steg.</p>
+<ol>
+<li>Anropa mocken.</li>
+<li>Kontrollera att svaret inte innehåller valideringsfel från den automatiska valideringen.</li>
+</ol>
+<h2>Testfall</h2>
+<h3>Informationsavlämning</h3>
+<p><b>Testa nedanstående anrop som ni avser att använda:</b></p>
+<p>Verifiera att anrop med Vårdenhet går att genomföra.</p>
+<p>Verifiera att anrop med Personnummer går att genomföra.</p>
+<p>Verifiera att anrop med Samordningsnummer går att genomföra.</p>
+<p>Verifiera att anrop med Reservnummer går att genomföra.</p>
+<p>Verifiera att anrop med urval på tid går att genomföra.</p>
+<p>Verifiera att anrop med Källsystem går att genomföra.</p>
+<p>Verifiera att anrop med Vårdkontakt går att genomföra.</p>
+<p>Verifiera att anrop skickas med rätt encoding i httpHeader.</p> 
+</body>
+</html>

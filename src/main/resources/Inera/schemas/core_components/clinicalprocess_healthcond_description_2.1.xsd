@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License. You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied. See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="urn:riv:clinicalprocess:healthcond:description:2"
+    xmlns:codes="urn:riv:clinicalprocess:healthcond:description:enums:2"
+    targetNamespace="urn:riv:clinicalprocess:healthcond:description:2"
+    elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
+
+    <xs:import schemaLocation="./clinicalprocess_healthcond_description_enum_2.1.xsd"
+        namespace="urn:riv:clinicalprocess:healthcond:description:enums:2"/>
+
+    <xs:complexType name="CareDocumentationType">
+        <xs:sequence>
+            <xs:element name="careDocumentationHeader" type="tns:CPatientSummaryHeaderType"/>
+            <xs:element name="careDocumentationBody" type="tns:CareDocumentationBodyType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CareDocumentationBodyType">
+        <xs:sequence>
+            <xs:element name="clinicalDocumentNote" type="tns:ClinicalDocumentNoteType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunctionalStatusAssessmentType">
+        <xs:sequence>
+            <xs:element name="functionalStatusAssessmentHeader" type="tns:PatientSummaryHeaderType"/>
+            <xs:element name="functionalStatusAssessmentBody"
+                type="tns:FunctionalStatusAssessmentBodyType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunctionalStatusAssessmentBodyType">
+        <xs:sequence>
+            <xs:element name="assessmentCategory" type="codes:AssessmentCategoryEnum"/>
+            <xs:element minOccurs="0" name="comment" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="padl" type="tns:PADLType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="disability" type="tns:DisabilityType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- @TODO better names for clinicalDocumentNoteCode -->
+    <xs:complexType name="ClinicalDocumentNoteType">
+        <xs:sequence>
+            <xs:element name="clinicalDocumentNoteCode" type="codes:ClinicalDocumentNoteCodeEnum"
+                minOccurs="0" maxOccurs="1"/>
+            <xs:element name="clinicalDocumentTypeCode" type="codes:ClinicalDocumentTypeCodeEnum"
+                minOccurs="0" maxOccurs="1"/>
+            <xs:element name="clinicalDocumentNoteTitle" type="xs:string" minOccurs="0"/>
+            <xs:element name="clinicalDocumentNoteText" type="xs:string" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="multimediaEntry" type="tns:MultimediaType" minOccurs="0" maxOccurs="1"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="dissentintOpinion"
+                type="tns:DissentingOpinionType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PatientSummaryHeaderType">
+        <xs:sequence>
+            <xs:element name="documentId" type="xs:string"/>
+            <xs:element name="sourceSystemHSAId" type="tns:HSAIdType"/>
+            <xs:element name="documentTitle" type="xs:string" minOccurs="0"/>
+            <xs:element name="documentTime" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="patientId" type="tns:PersonIdType"/>
+            <xs:element name="accountableHealthcareProfessional"
+                type="tns:HealthcareProfessionalType"/>
+            <xs:element name="legalAuthenticator" type="tns:LegalAuthenticatorType" minOccurs="0"/>
+            <xs:element name="approvedForPatient" type="xs:boolean"/>
+            <xs:element name="careContactId" type="xs:string" minOccurs="0"/>
+            <xs:element minOccurs="0" name="nullified" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="nullifiedReason" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Only used here to keep backwards compatibility with GetCareDocumentation 2.0, must be removed in favour
+        of PatientSummaryHeaderType above when we go for the next major version -->
+    <xs:complexType name="CPatientSummaryHeaderType">
+        <xs:sequence>
+            <xs:element name="documentId" type="xs:string"/>
+            <xs:element name="sourceSystemHSAid" type="tns:HSAIdType"/>
+            <xs:element name="documentTitle" type="xs:string" minOccurs="0"/>
+            <xs:element name="documentTime" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="patientId" type="tns:PersonIdType"/>
+            <xs:element name="accountableHealthcareProfessional"
+                type="tns:HealthcareProfessionalType"/>
+            <xs:element name="legalAuthenticator" type="tns:LegalAuthenticatorType" minOccurs="0"/>
+            <xs:element name="approvedForPatient" type="xs:boolean"/>
+            <xs:element name="careContactId" type="xs:string" minOccurs="0"/>
+            <xs:element minOccurs="0" name="nullified" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="nullifiedReason" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HealthcareProfessionalType">
+        <xs:sequence>
+            <xs:element name="authorTime" type="tns:TimeStampType"/>
+            <xs:element name="healthcareProfessionalHSAId" type="tns:HSAIdType" minOccurs="0"/>
+            <xs:element name="healthcareProfessionalName" type="xs:string" minOccurs="0"/>
+            <xs:element name="healthcareProfessionalRoleCode" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="healthcareProfessionalOrgUnit" type="tns:OrgUnitType" minOccurs="0"/>
+            <xs:element name="healthcareProfessionalCareUnitHSAId" type="tns:HSAIdType"
+                minOccurs="0"/>
+            <xs:element minOccurs="0" name="healthcareProfessionalCareGiverHSAId"
+                type="tns:HSAIdType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="OrgUnitType">
+        <xs:sequence>
+            <xs:element name="orgUnitHSAId" type="tns:HSAIdType" minOccurs="1"/>
+            <xs:element name="orgUnitName" type="xs:string" minOccurs="1"/>
+            <xs:element name="orgUnitTelecom" type="xs:string" minOccurs="0"/>
+            <xs:element name="orgUnitEmail" type="xs:string" minOccurs="0"/>
+            <xs:element name="orgUnitAddress" type="xs:string" minOccurs="0"/>
+            <xs:element name="orgUnitLocation" type="xs:string" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DiagnosisType">
+        <xs:sequence>
+            <xs:element name="diagnosisHeader" type="tns:PatientSummaryHeaderType"/>
+            <xs:element name="diagnosisBody" type="tns:DiagnosisBodyType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DiagnosisBodyType">
+        <xs:sequence>
+            <xs:element name="typeOfDiagnosis" type="codes:DiagnosisTypeEnum"/>
+            <xs:element minOccurs="0" name="chronicDiagnosis" type="xs:boolean"/>
+            <xs:element name="diagnosisTime" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="diagnosisCode" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="relatedDiagnosis" type="tns:RelatedDiagnosisType"
+                maxOccurs="unbounded" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlertInformationType">
+        <xs:sequence>
+            <xs:element name="alertInformationHeader" type="tns:PatientSummaryHeaderType"/>
+            <xs:element name="alertInformationBody" type="tns:AlertInformationBodyType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RelatedDiagnosisType">
+        <xs:sequence>
+            <xs:element name="documentId" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlertInformationBodyType">
+        <xs:sequence>
+            <xs:element name="typeOfAlertInformation" type="tns:CVType"/>
+            <xs:element name="ascertainedDate" type="tns:DateType" minOccurs="0"/>
+            <xs:element name="verifiedTime" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="validityTimePeriod" type="tns:TimePeriodType"/>
+            <xs:element name="alertInformationComment" type="xs:string" minOccurs="0"/>
+            <xs:element name="obsoleteTime" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="obsoleteComment" type="xs:string" minOccurs="0"/>
+            <xs:element name="hypersensitivity" type="tns:HyperSensitivityType" minOccurs="0"/>
+            <xs:element name="seriousDisease" type="tns:SeriousDiseaseType" minOccurs="0"/>
+            <xs:element name="treatment" type="tns:TreatmentType" minOccurs="0"/>
+            <xs:element name="communicableDisease" type="tns:CommunicableDiseaseType" minOccurs="0"/>
+            <xs:element name="restrictionOfCare" minOccurs="0" type="tns:RestrictionOfCareType"/>
+            <xs:element name="unstructuredAlertInformation" minOccurs="0"
+                type="tns:UnstructuredAlertInformationType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="relatedAlertInformation"
+                type="tns:RelatedAlertInformationType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HyperSensitivityType">
+        <xs:sequence>
+            <xs:element name="typeOfHypersensitivity" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="degreeOfSeverity" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="degreeOfCertainty" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="pharmaceuticalHypersensitivity"
+                type="tns:PharmaceuticalHypersensitivityType" minOccurs="0"/>
+            <xs:element name="otherHypersensitivity" type="tns:OtherHypersensitivityType"
+                minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PharmaceuticalHypersensitivityType">
+        <xs:sequence>
+            <xs:element name="atcSubstance" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="nonATCSubstance" type="xs:string" minOccurs="0"/>
+            <xs:element name="nonATCSubstanceComment" type="xs:string" minOccurs="0"/>
+            <xs:element name="pharmaceuticalProductId" type="tns:CVType" maxOccurs="unbounded"
+                minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OtherHypersensitivityType">
+        <xs:sequence>
+            <xs:element name="hypersensitivityAgent" type="xs:string" minOccurs="0"/>
+            <xs:element name="hypersensitivityAgentCode" type="tns:CVType" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SeriousDiseaseType">
+        <xs:sequence>
+            <xs:element name="disease" type="tns:CVType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TreatmentType">
+        <xs:sequence>
+            <xs:element name="treatmentDescription" type="xs:string"/>
+            <xs:element name="treatmentCode" type="tns:CVType" minOccurs="0"/>
+            <xs:element name="pharmaceuticalTreatment" type="tns:CVType" minOccurs="0"
+                maxOccurs="unbounded"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CommunicableDiseaseType">
+        <xs:sequence>
+            <xs:element name="communicableDiseaseCode" type="tns:CVType"/>
+            <xs:element name="routeOfTransmission" type="tns:CVType" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RestrictionOfCareType">
+        <xs:sequence>
+            <xs:element name="restrictionOfCareComment" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="UnstructuredAlertInformationType">
+        <xs:sequence>
+            <xs:element name="unstructuredAlertInformationHeading" type="xs:string"/>
+            <xs:element name="unstructuredAlertInformationContent" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RelatedAlertInformationType">
+        <xs:sequence>
+            <xs:element name="typeOfAlertInformationRelationship" type="tns:CVType"/>
+            <xs:element name="relationComment" type="xs:string" minOccurs="0"/>
+            <xs:element name="documentId" type="xs:string" maxOccurs="unbounded"/>
+
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PADLType">
+        <xs:sequence>
+            <xs:element name="typeOfAssessment" type="tns:CVType"/>
+            <xs:element name="assessment" type="xs:string" minOccurs="1"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DisabilityType">
+        <xs:sequence>
+            <xs:element name="disabilityAssessment" type="tns:CVType"/>
+            <xs:element name="comment" type="xs:string" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- 
+        Below: only helper types allowed.
+        
+        A helper type is a type used in one ore more of the domain schema common types.
+        It can also be a type used in two or more service schemas.
+    -->
+
+    <xs:complexType name="DatePeriodType">
+        <xs:annotation>
+            <xs:documentation> Används för att specificera ett datumintervall med hjälp av start-
+                och slutdatum. start: Startdatum på formatet ÅÅÅÅMMDD end: Slutdatum på formatet
+                ÅÅÅÅMMDD </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="start" type="tns:DateType"/>
+            <xs:element name="end" type="tns:DateType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- YYYYMMDD -->
+    <xs:simpleType name="DateType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(19|20)\d\d(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- @TODO Should we have maxlength 64? -->
+    <xs:simpleType name="HSAIdType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <xs:complexType name="MultimediaType">
+        <xs:sequence>
+            <xs:element name="mediaType" type="codes:MediaTypeEnum"/>
+            <xs:element name="value" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="reference" type="xs:anyURI" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TimePeriodType">
+        <xs:annotation>
+            <xs:documentation> Används för att specificera ett datumintervall med hjälp av start-
+                och slutdatum. start: Startdatum på formatet YYYYMMDDhhmmss end: Slutdatum på
+                formatet YYYYMMDDhhmmss </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="start" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:element name="end" type="tns:TimeStampType" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="TimeStampType">
+        <xs:annotation>
+            <xs:documentation> A quantity specifying a point on the axis of natural time. A point in
+                time is most often represented as a calendar expression. The time has the format
+                YYYYMMDDhhmmss </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="(19|20)\d\d(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(0[0-9]|1[0-9]|2[0123])([0-5])([0-9])([0-5])([0-9])"
+            />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="CVType">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" minOccurs="0"/>
+            <xs:element name="codeSystem" type="xs:string" minOccurs="0"/>
+            <xs:element name="codeSystemName" type="xs:string" minOccurs="0"/>
+            <xs:element name="codeSystemVersion" type="xs:string" minOccurs="0"/>
+            <xs:element name="displayName" type="xs:string" minOccurs="0"/>
+            <xs:element name="originalText" type="xs:string" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LegalAuthenticatorType">
+        <xs:sequence>
+            <xs:element name="signatureTime" type="tns:TimeStampType"/>
+            <xs:element name="legalAuthenticatorHSAId" type="tns:HSAIdType" minOccurs="0"/>
+            <xs:element name="legalAuthenticatorName" type="xs:string" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DissentingOpinionType">
+        <xs:annotation>
+            <xs:documentation> </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="opinionId" type="tns:IIType" minOccurs="0"/>
+            <xs:element name="authorTime" type="tns:TimeStampType" minOccurs="1"/>
+            <xs:element name="opinion" type="xs:string"/>
+            <xs:element name="personId" type="tns:PersonIdType"/>
+            <xs:element name="personName" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PQType">
+        <xs:sequence>
+            <xs:element name="value" type="xs:double"/>
+            <xs:element name="unit" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IIType">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="root" type="xs:string"/>
+            <xs:element name="extension" type="xs:string" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PersonIdType">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="communicableDisease" type="tns:CommunicableDiseaseType"/>
+
+    <xs:complexType name="ResultType">
+        <xs:annotation>
+            <xs:documentation> </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="resultCode" type="codes:ResultCodeEnum"/>
+            <xs:element name="errorCode" type="codes:ErrorCodeEnum" minOccurs="0"/>
+            <xs:element name="logId" type="xs:string"/>
+            <xs:element minOccurs="0" name="subCode" type="xs:string"/>
+            <xs:element name="message" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

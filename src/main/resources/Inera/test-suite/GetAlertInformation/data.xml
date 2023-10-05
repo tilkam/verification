@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<?xml-stylesheet type="text/xsl" href="./../TK-doc-sv.xsl"?>
+<testsuite>
+	<id>GetAlertInformation 2.0</id>
+	<contractName>GetAlertInformation</contractName>
+	<description>Denna testsvit används för att verifiera implementationen av GetAlertInformation 2.0 inför integration med nationell tjänsteplattform.</description>
+	<globaldata>
+		<!-- Adress till SIT-Miljön -->
+		<!-- <webServiceUrl>https://test.esb.ntjp.se/vp/clinicalprocess/healthcond/description/GetAlertInformation/2/rivtabp21</webServiceUrl> -->
+		<!-- Adress till QA-Miljön -->
+		<!-- <webServiceUrl>https://qa.esb.ntjp.se/vp/clinicalprocess/healthcond/description/GetAlertInformation/2/rivtabp21</webServiceUrl> -->
+		<webServiceUrl>http://localhost:8088/mockGetAlertInformationResponderBinding</webServiceUrl>
+		<httpHeaderHsaId>consumer</httpHeaderHsaId>
+		<logicalAddress>112233</logicalAddress>
+		<patientId>195709263080</patientId>
+		<patientIdType>1.2.752.129.2.1.3.1</patientIdType>
+		<sourceSystemHSAId>112233</sourceSystemHSAId>
+		<!-- Loggparametrar-->
+		<logTestData>false</logTestData>
+		<logTestDataPath>C:/temp/SOAP-UI/</logTestDataPath>
+		<logTestDataFilesAllowed>500</logTestDataFilesAllowed>
+	</globaldata>
+	<testcase id="1.1.1 Personnummer">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.1.2 Samordningsnummer">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<patientId>196812732391</patientId>
+			<patientIdType>1.2.752.129.2.1.3.3</patientIdType>
+		</data>
+	</testcase>
+	<testcase id="1.1.3 Lokalt reservnummer">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<patientId>19570926308A</patientId>
+			<patientIdType>ABC-123</patientIdType>
+			<!-- <logicalAddress>${sourceSystemHSAId}</logicalAddress> -->
+		</data>
+	</testcase>
+	<section id="1.2 Tidsfiltrering">
+		<description>Följande tester på tidsfiltrering består av flera steg.
+		<ol>
+			<li>Anrop utan filtrering.</li>
+			<li>Sökintervall beräknas (se respektive testfall).</li>
+			<li>Anrop med tidsfiltrering för varje beräknat sökintervall. Resultatet jämförs med förväntat resultat.</li>
+		</ol>
+		För bra testning på dessa punkter är en varierad testdata avseende tidpunkter viktig.
+		Om möjligt bör poster skapas så att de olika tidsfälten har olika datum.
+        </description>
+	</section>
+	<testcase id="1.2.1 TimePeriod giltighetsdatum">
+		<description>Tidsfiltrering. Sökning sker på alla datum med början eller slut på giltighetsperiod (validityTimePeriod.start, validityTimePeriod.end eller obsoleteTime) i det ofiltrerade svaret.
+		</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.2.2 TimePeriod intervall">
+		<description>Tidsfiltrering. Sökning sker på slumpvisa intervall mellan första och sista giltighetsdatum som förekommer i det ofiltrerade svaret.
+		</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<numberOfIntervals>30</numberOfIntervals>
+		</data>
+	</testcase>
+	<testcase id="1.2.3 TimePeriod tomt svar">
+		<description>Tidsfiltrering. Sökning sker på datum före alla tidpunkter i det ofiltrerade svaret, så att förväntat svar är tomt (inga informationsposter).
+		</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.2.4 TimePeriod manuell">
+		<description>Tidsfiltrering. Sökintervall sätts manuellt. Detta kan användas för utforskade testning och felsökning.
+		</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<timePeriodStart>20120101</timePeriodStart>
+			<timePeriodEnd>20171231</timePeriodEnd>
+		</data>
+	</testcase>
+	<testcase id="1.3 CareUnit">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<careUnitId1>1122334455</careUnitId1>
+		</data>
+	</testcase>
+	<testcase id="1.4 SourceSystem">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.5 CareContact">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<careContactId>1122334455</careContactId>
+		</data>
+	</testcase>
+	<testcase id="1.7 SoapFault">
+		<description>Verifierar att resultatet är ett Soapfault. Detta testfall kräver att tjänsteproducenten skapar förutsättningar för ett internt fel att uppstå.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.8 NonExisting PatientId">
+		<description>Verifierar att tjänsteproducenten returnerar ett tomt resultat istället för Soap Fault, om patienten är okänd i systemet.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="1.9 NonExisting CareContactId">
+		<description>Verifierar att tjänsteproducenten returnerar ett tomt resultat istället för Soap Fault, om vårdkontakten är okänd i systemet.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<sourceSystemHSAId>112233</sourceSystemHSAId>
+			<careContactId>1122334455</careContactId>
+		</data>
+	</testcase>
+	<testcase id="2.1 Encoding_HeaderProlog">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="2.2 Encoding_SpecialCharacters">
+		<description>Verifierar att tjänsteproducenten klarar att kapsla in specialtecken på ett korrekt sätt.<br/>
+			I filen <b>data.xml</b> finns en parameter "testString". Denna innehåller värdet "&lt;![CDATA[åäö&lt;&gt;&gt;&lt;&amp;]]&gt;".<br/>
+			Registrera endast "åäö&lt;&gt;&gt;&lt;&amp;" i källsystemet ("&lt;![CDATA[" och "]]&gt;" krävs för att data.xml inte ska tolka strängen felaktigt.)<br/><br/>
+			Det rekommenderas att testa med specialtecken i olika fält som mappas in i olika element i responsen.<br/>
+			Testa även gärna andra specialtecken än just dessa, speciellt om ni vet om att vissa specialtecken är extra vanliga i er verksamhet.<br/><br/>
+			OBS! Elementet <b>clinicalDocumentNoteText</b> kan leverera <b>DocBook</b>-formatterad text. För tester som rör detta, använd testfall <b>5.14</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<testString><![CDATA[åäö<>><&]]></testString>
+		</data>
+	</testcase>
+	<testcase id="3.1 VG_VE">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="3.2 AuthorTime">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="4.1 ApprovedForPatient_true">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="4.2 ApprovedForPatient_false">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.1 signed">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.2 unsigned">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.3 locked">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.4 Hypersensitivity">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver överkänslighet. Element <b>hypersensitivity</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.5 TypeOfHypersensitivity">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver typ av överkänslighet. Element <b>typeOfHypersensitivity</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.6 DegreeOfSeverity_Livshotande">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med allvarlighetsgrad "Livshotande". Element <b>degreeOfSeverity</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.7 DegreeOfSeverity_Skadande">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med allvarlighetsgrad "Skadande". Element <b>degreeOfSeverity</b>.
+			Observera att det även finns stöd för kodverks-varianten V-TIM, vilket betyder att texten "Skadlig" i <b>originalText</b> godkänns.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.8 DegreeOfSeverity_Besvärande">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med allvarlighetsgrad "Besvärande". Element <b>degreeOfSeverity</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.9 DegreeOfCertainty_Misstänkt">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med visshetsgrad "Misstänkt". Element <b>degreeOfCertainty</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.10 DegreeOfCertainty_Trolig">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med visshetsgrad "Trolig". Element <b>degreeOfCertainty</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.11 DegreeOfCertainty_Konstaterad">
+		<description>Verifierar att tjänsteproducenten kan returnera en post med visshetsgrad "Konstaterad". Element <b>degreeOfCertainty</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.12 ATCSubstance">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en substans enligt kodverk ATC. Element <b>ATCSubstance</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.13 NonATCSubstance">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en substans utanför kodverk ATC. Element <b>nonATCSubstance</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.14 HypersensitivityAgent">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver den agens som bedöms kunna orsaka en överkänslighetsreaktion. Element <b>hypersensitivityAgent</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.15 SeriousDisease">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en allvarlig sjukdom. Element <b>seriousDisease</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.16 Treatment">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en behandling. Element <b>treatment</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.17 CommunicableDisease">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en smittsam sjukdom. Element <b>communicableDisease</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.18 RestrictionOfCare">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver ett uppmärksammat förhållande som kan påverka behandlingen. Element <b>restrictionOfCare</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.19 UnstructuredAlertInformation">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en tidigare utfärdad varning som inte har preciserats enligt NPÖ-strukturen. Element <b>unstructuredAlertInformation</b>.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.20 PharmaceuticalHyperSensitivity">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en läkemedelsöverkänslighet. Element <b>pharmaceuticalHyperSensitivity</b></description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="5.21 OtherHyperSensitivity">
+		<description>Verifierar att tjänsteproducenten kan returnera en post som beskriver en överkänslighet annan än läkemedelsöverkänslighet. Element <b>otherHyperSensitivity</b></description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="6.1 Loadtest">
+		<data>
+			<patientId1>196001209136</patientId1>
+			<patientId2>195709263080</patientId2>
+		</data>
+	</testcase>
+	<testcase id="6.2 Recovery">
+		<data>
+			<patientId1>196001209136</patientId1>
+			<patientId2>195709263080</patientId2>
+		</data>
+	</testcase>
+	<testcase id="7.1 CareUnit_Blacklisted">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<httpHeaderHsaId2>444</httpHeaderHsaId2>
+			<filterString>Bortfiltrerad VC</filterString>
+		</data>
+	</testcase>
+	<testcase id="7.2 Consumer_Blacklisted">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<httpHeaderHsaId2>444</httpHeaderHsaId2>
+		</data>
+	</testcase>
+	<testcase id="7.3 Consumer_Independent">
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+			<httpHeaderHsaId2>444</httpHeaderHsaId2>
+		</data>
+	</testcase>
+	<section id="8 Testdata">
+		<description>Då heltäckande testdata kan vara svår att framställa finns i denna testsvit stöd för att säkerställa att testdata är tillräckligt varierad. Detta för att kvalitetssäkringen av tjänstekontraktet skall bli så bred som möjligt.
+        </description>
+	</section>
+	<testcase id="8.1 Validity start_end">
+		<description>Verifierar att testdata innehåller post där start och end för giltighetsdatum används för urvalet. Dvs Obsoletetime finns ej eller är senare än giltighetsdatumets slut.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="8.2 Validity start and Obsolete">
+		<description>Verifierar att testdata innehåller post där start och inaktualitetsdatum används för urvalet. Dvs giltighetsdatumets slut finns ej eller är senare än inaktualitetsdatumet.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+	<testcase id="8.3 Validity start only">
+		<description>Verifierar att testdata innehåller post där start för giltighetsdatum finns men inte end eller inaktualitetsdatum.</description>
+		<data>
+			<!-- Avkommentera för att skriva över den globalt definierade parametern -->
+			<!-- <patientId></patientId> -->
+		</data>
+	</testcase>
+</testsuite>

@@ -1,0 +1,10 @@
+﻿Release notes för testsviten. Dokumentet beskriver de ändringar som genomförts för varje release.
+2.1.10 190328 Första versionen, la till domänversion i TK-doc-sv.xsl.
+2.1.10 190328 Anpassade mockar till VavTK.
+2.1.10 190329 Uppdatering av SjD
+2.1.10 190402 Uppdaterat till domänversion & rättat småfel
+2.1.10 190403 Rättat filnamn och encoding
+2.1.10 190410 Uppdaterat SjD
+2.1.11 190502 Uppdaterat dokument till version 2.1.11
+2.1.12 190816 GAI, lagt till TF5.20 och TF5.21 samt uppdaterat SjD
+2.1.13 200827 Uppdaterat med SjD mall

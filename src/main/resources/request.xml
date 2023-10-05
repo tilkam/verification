@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<GetCareDocumentation xmlns="urn:riv:clinicalprocess:healthcond:description:GetCareDocumentationResponder:2" xmlns:ns2="urn:riv:clinicalprocess:healthcond:description:2" xmlns:ns3="urn:riv:clinicalprocess:healthcond:description:2.1" xmlns:ns4="urn:riv:itintegration:registry:1">
+    <patientId>
+        <ns2:id>900607-8027</ns2:id>
+        <ns2:type>1016632772412</ns2:type>
+    </patientId>
+</GetCareDocumentation>
